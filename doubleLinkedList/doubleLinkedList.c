@@ -49,6 +49,7 @@ void deleteDoublyList(DoublyList* pList){
 	free(head);
 	head = NULL;
 	tail = NULL;
+	free(&(pList->headerNode));
 	free(pList);
 	pList = NULL;
 }
@@ -88,9 +89,17 @@ int addDLElement(DoublyList* pList, int position, DoublyListNode *element){
 		now = now->pRLink;
 
 	if (idx == 1){
-		element->pRLink = now;
-		element->pLLink = &(pList->headerNode);
-		pList->headerNode.pRLink = element;
+		if (pList->currentElementCount != 0){
+			element->pRLink = now;
+			element->pLLink = &(pList->headerNode);
+			pList->headerNode.pRLink = element;
+		}
+		else{
+			element->pLLink = &(pList->headerNode);
+			element->pRLink = &(pList->headerNode);
+			pList->headerNode.pRLink = element;
+			pList->headerNode.pLLink = element;
+		}
 	}
 	else if (now->pRLink == &(pList->headerNode)){
 		element->pRLink = &(pList->headerNode);
