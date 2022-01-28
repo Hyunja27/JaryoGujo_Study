@@ -212,18 +212,108 @@ void displaypolyList(polyList* pList){
 	printf("%dx^%d <-> [tail (A.K.A Head)]\n\n == Dispaly_End == \n\n\n",head->coef, head->expo);
 }
 
-void rearrangePolyList(polyList* pList){
-	int len = pList->currentElementCount;
-	struct polyNodeType* tmp[len];
-	polyNode *now = pList->headerNode.pRLink;
-	int idx = 0;
+//degree : 5 <-> 6 4 1 2   
+// void rearrangePolyList(polyList* pList){
 
-	while (now != &(pList->headerNode)){
-		tmp[idx] = now;
-		tmp[idx]->pLLink = NULL;
+// 	int len = pList->currentElementCount;
+
+// 	struct polyNodeType* tmp[len];
+	
+// 	polyNode *now = pList->headerNode.pRLink;
+	
+// 	int idx = 0;
+
+// 	while (now != &(pList->headerNode)){
+// 		tmp[idx] = now;
+// 		tmp[idx]->pLLink = NULL;
+// 		tmp[idx]->pRLink = NULL;
+// 	}
+// }
+
+
+// => 원격협업 시자악!
+
+int	addPolyNode(polyList *pList, int coef, int expo)
+{
+	polyNode *curr = pList->headerNode.pRLink;
+	polyNode *node;
+
+	if (!pList)
+		return FALSE;
+	node = (polyNode *)malloc(sizeof(polyNode));
+	if (!node)
+		return FALSE;
+
+	node->coef = coef;
+	node->expo = expo;
+
+	node->pLLink = 0;
+	node->pRLink = 0;
+
+	//리스트가 비어있거나, 인자로 들어온 expo가 최고차항일 경우
+	if (pList->currentElementCount == 0){
+		curr = node;
+		node->pLLink = &(pList->headerNode);
+		node->pRLink = &(pList->headerNode);
+		pList->headerNode.pRLink = node;
+		pList->headerNode.pLLink = node;
+		pList->currentElementCount++;
+		return (TRUE);
 
 	}
+	else if (curr->expo < expo){
+		node->pRLink = pList->headerNode.pRLink;
+		node->pLLink = &(pList->headerNode);
+		curr->pLLink = node;
+		pList->headerNode.pRLink = node;
+		pList->currentElementCount++;
+		return (TRUE);
+	}
+	else{
+		while ((curr->pRLink) != &(pList->headerNode))
+		{
+			//기존 노드 중에 동일한 expo를 가진 노드가 있을 경우
+			if (curr->expo == node->expo)
+			{
+				curr->coef += coef;
+				return (TRUE);
+			}
+			curr = curr->pRLink;
+		}
+	}
+	pList->headerNode.pLLink->pRLink = node;
+	node->pLLink = pList->headerNode.pLLink;
+	node->pRLink = &(pList->headerNode);
+	pList->headerNode.pLLink = node;
+	pList->currentElementCount++;
+	return (TRUE);
 }
 
-void sumPolyList();
+
+polyList* sumPolyList(polyList *A, polyList *B)
+{
+	//A :        5x^2 + 6x
+	//B : 4x^3 +         x  + 6
+	//C : 4x&3 + 5x^2  +7x  + 6
+	polyList *C; //C라는 다항식 그릇
+	C = createpolyList(); //그릇에 메모리 할당
+	polyNode *A_curr = A->headerNode.pRLink;
+	polyNode *A_end = A->headerNode.pLLink;
+	polyNode *B_curr = B->headerNode.pRLink;
+	polyNode *B_end = B->headerNode.pLLink;
+
+	// C에다가 A를 add
+	while (A_curr != A_end->pRLink){
+		addPolyNode(C, A_curr->coef, A_curr->expo);
+		A_curr = A_curr->pRLink;
+	}
+	// C에다가 B를 add
+	while (B_curr != B_end->pRLink){
+		addPolyNode(C, B_curr->coef, B_curr->expo);
+		B_curr = B_curr->pRLink;
+	}
+	return (C);
+}
+
+
 

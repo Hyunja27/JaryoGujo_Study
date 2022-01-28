@@ -24,12 +24,15 @@ typedef struct polyListType
 polyList* createpolyList();
 void deletepolyList(polyList* pList);
 int addDLElement(polyList* pList, int position, polyNode *element);
+int	addPolyNode(polyList *pList, int coef, int expo);
 int removeDLElement(polyList* pList, int position);
 void clearpolyList(polyList* pList);
 int getpolyListLength(polyList* pList);
 polyNode* getDLElement(polyList* pList, int position);
 void displaypolyList(polyList* pList);
 int pushDLElement(polyList* pList, polyNode *element);
+polyList* sumPolyList(polyList *A, polyList *B);
+int	addPolyNode(polyList *pList, int coef, int expo);
 
 #endif
 
