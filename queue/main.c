@@ -2,7 +2,9 @@
 
 int main(void)
 {
-    ArrayQueue Q;
+    ArrayQueue *Q;
+
+    Q = createArrayQueue(10);
 
     return (0);
 }
