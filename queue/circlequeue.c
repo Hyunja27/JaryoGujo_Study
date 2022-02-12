@@ -1,4 +1,6 @@
-#include "arrayqueue.h"
+#include "banksimulator.h"
+// #include "arrayqueue.h"
+
 
 ArrayQueue* createArrayQueue(int maxElementCount)
 {
@@ -31,21 +33,27 @@ int enqueueAQ(ArrayQueue* pQueue, ArrayQueueNode element)
 ArrayQueueNode *dequeueAQ(ArrayQueue* pQueue)
 {
     if (!pQueue)
-        exit(-1) ;
+        return 0;
     if (pQueue->rear == pQueue->front)
-        exit(-1) ;
+        return 0;
+    
+    // ArrayQueueNode *tmp = &(pQueue->pElement[(pQueue->front) % pQueue->maxElementCount]);
+    // tmp->data.status = 0
+    // tmp->data.name = ''
+    // tmp->data.serviceTime = 0
+    // tmp->data.arrivalTime = 0
+    
     pQueue->front += 1;
     ArrayQueueNode *tmp = &(pQueue->pElement[(pQueue->front) % pQueue->maxElementCount]);
-
     return (tmp);
 }
 
 ArrayQueueNode *peekAQ(ArrayQueue* pQueue)
 {
     if (!pQueue)
-        exit(-1);
+        return 0;
     if (pQueue->rear == pQueue->front)
-        exit(-1);
+        return 0;
     return (&(pQueue->pElement[(pQueue->front + 1) % pQueue->maxElementCount]));
 }
 
